@@ -6,7 +6,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"No Tests\" && exit 0"
+    "test": "mocha test/*.js"
   },
   "author": "",
   "private": true,

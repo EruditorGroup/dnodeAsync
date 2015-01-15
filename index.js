@@ -29,7 +29,7 @@ module.exports = function(opts) {
       });
     });
   })
-  .timeout(opts.timeout)
+  .timeout(opts.timeout || 100)
   .disposer(function() {
     if (connection) {
       return connection.end();
