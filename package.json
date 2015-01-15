@@ -1,0 +1,21 @@
+{
+  "name": "dnodeAsync",
+  "version": "0.1.0",
+  "description": "",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"No Tests\" && exit 0"
+  },
+  "author": "",
+  "private": true,
+  "devDependencies": {
+    "mocha": "^2.0.1",
+    "sinon": "^1.11.1"
+  },
+  "dependencies": {
+    "bluebird": "^2.6.4",
+    "dnode": "^1.2.0"
+  }
+}
