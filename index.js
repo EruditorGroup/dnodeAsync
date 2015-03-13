@@ -30,6 +30,10 @@ module.exports = function(opts) {
     });
   })
   .timeout(opts.timeout || 100)
+  .catch(function(err) {
+    err.address = opts.uri;
+    throw err;
+  })
   .disposer(function() {
     if (connection) {
       return connection.end();
