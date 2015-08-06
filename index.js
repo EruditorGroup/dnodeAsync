@@ -14,6 +14,7 @@ module.exports = function(opts) {
     connection = net.connect(_opts.uri);
     connection.pipe(d).pipe(connection);
 
+    connection.once('error', reject);
     d.once('remote', function (remote) {
         resolve(Promise.promisifyAll(remote));
     });
