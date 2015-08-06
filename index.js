@@ -29,7 +29,8 @@ module.exports = function(opts) {
          connection.end();
          connection.unref();
          connection.once('close', resolve);
-         connection.once('error', reject);
+         // Нет нужды слушать 'error', т.к. 'close' вызывается сразу после возникновения ошибки
+         // https://nodejs.org/docs/latest/api/net.html#net_event_error_1
       });
   });
 };
