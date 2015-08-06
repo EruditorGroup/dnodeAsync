@@ -26,10 +26,12 @@ module.exports = function(opts) {
     throw err;
   })
   .disposer(function() {
+      if (connection.destroyed) { return; }
+
       return new Promise(function (resolve, reject) {
+         connection.once('close', resolve);
          connection.end();
          connection.unref();
-         connection.once('close', resolve);
          // Нет нужды слушать 'error', т.к. 'close' вызывается сразу после возникновения ошибки
          // https://nodejs.org/docs/latest/api/net.html#net_event_error_1
       });
