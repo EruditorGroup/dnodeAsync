@@ -27,8 +27,7 @@ module.exports = function(opts) {
   })
   .disposer(function() {
       if (connection.destroyed) { return; }
-
-      return new Promise(function (resolve, reject) {
+      return new Promise(function (resolve) {
          connection.once('close', resolve);
          connection.end();
          connection.unref();
