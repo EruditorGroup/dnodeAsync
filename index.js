@@ -1,33 +1,23 @@
 "use strict";
 var dnode = require('dnode');
-var domain = require('domain');
+var net = require('net');
 var Promise = require('bluebird');
 
 module.exports = function(opts) {
   var connection;
   return new Promise(function(resolve, reject) {
-    var safe, isStop = false;
-    safe = domain.create();
-    safe.on('error', function(e) {
-      connection = undefined;
-      isStop = true;
-      reject(e);
+    var _opts = opts || {};
+    var options = _opts.options || {};
+    options.weak = options.weak || false;
+
+    var d = dnode(undefined, options);
+    connection = net.connect(_opts.uri);
+    connection.pipe(d).pipe(connection);
+
+    d.once('remote', function (remote) {
+        resolve(Promise.promisifyAll(remote));
     });
-    return safe.run(function() {
-      var d = dnode(undefined, opts.options);
-      connection = d.connect(opts.uri);
-      connection.on('error', function(e) {
-        reject(e);
-        if (!isStop) {
-          connection.end();
-          connection = undefined;
-          isStop = true;
-        }
-      });
-      return connection.on('remote', function(remote) {
-        return resolve(Promise.promisifyAll(remote));
-      });
-    });
+    d.once('error', reject);
   })
   .timeout(opts.timeout || 100)
   .catch(function(err) {
@@ -35,9 +25,11 @@ module.exports = function(opts) {
     throw err;
   })
   .disposer(function() {
-    if (connection) {
-      return connection.end();
-    }
+      return new Promise(function (resolve, reject) {
+         connection.end();
+         connection.unref();
+         connection.once('close', resolve);
+         connection.once('error', reject);
+      });
   });
 };
-
