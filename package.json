@@ -1,6 +1,6 @@
 {
   "name": "dnodeAsync",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "directories": {
     "test": "test"
@@ -15,7 +15,7 @@
     "sinon": "^1.11.1"
   },
   "dependencies": {
-    "bluebird": "^2.6.4",
+    "bluebird": "^2.9.34",
     "dnode": "git+ssh://git@github.com/EruditorGroup/dnode.git"
   }
 }
