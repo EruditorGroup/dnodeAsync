@@ -17,13 +17,16 @@ var data = 0;
 describe("main", function () {
 
   before(function () {
-    //console.log("start dnode server");
+
+    // Создаем тестовый dnode-сервер
     server = dnode({
 
+      // Обычный метод.
       getData : function (a, b, callback) {
         return callback(null, a*b)
       },
 
+      // Метод, который сначала падает failTimes раз.
       getDataRetry : function (a, b, callback) {
         callsCount++;
         if(callsCount <= failTimes) {
@@ -36,6 +39,7 @@ describe("main", function () {
     server.listen(address.port);
   });
 
+  // Пример использования через Promise.using().
   it("test", function () {
     data = 0;
     var opts = {uri: address};
@@ -57,6 +61,8 @@ describe("main", function () {
     });
   });
 
+  // Пример использования одиночного вызова remote-метода
+  // с возможностью повтора при ошибке.
   it("retry", function () {
     data = 0;
     var opts = {

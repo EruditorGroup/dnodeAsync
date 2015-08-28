@@ -46,13 +46,30 @@ var makeDisposerFunction = function (context) {
   };
 };
 
+/**
+ * Создает промиз-диспозер.
+ * Используется только через Promise.using(). Пример использования в тестах.
+ * Скорее всего, вам это не нужно! Используйте dnodeAsyncCall() для stateless-вызовов.
+ *
+ * @param {Object} opts {uri, timeout, options}
+ */
 function dnodeAsync(opts) {
   var context = {};
   return makePromise(context, opts)
     .disposer(makeDisposerFunction(context));
 }
 
-function dnodeAsyncCall(opts, _methodName, args, retries) {
+/**
+ * Подключается к opts.uri, вызывает удаленный метод _methodName с аргументами args.
+ * При ошибке может повторить вызов opts.retries раз. Повтор с задержкой opts.retryDelay.
+ * Для повтора переподключается заново. Гарантированно убирает за собой.
+ * Возвращает промиз на результат удаленного метода.
+ *
+ * @param opts
+ * @param _methodName
+ * @param args
+ */
+var dnodeAsyncCall = Promise.method(function (opts, _methodName, args, retries) {
   if(!_methodName || typeof(_methodName) !== 'string'){
     throw new Error("empty method name");
   }
@@ -84,7 +101,7 @@ function dnodeAsyncCall(opts, _methodName, args, retries) {
         });
     });
 
-}
+});
 dnodeAsync.dnodeAsyncCall = dnodeAsyncCall;
 
 module.exports = dnodeAsync;
