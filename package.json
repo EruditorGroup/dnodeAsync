@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "bluebird": "^2.9.34",
-    "dnode": "git+ssh://git@github.com/EruditorGroup/dnode.git"
+    "dnode": "^1.2.2"
   }
 }
