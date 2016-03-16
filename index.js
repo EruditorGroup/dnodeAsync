@@ -25,7 +25,9 @@ var makePromise = Promise.method(function (context, opts) {
   .timeout(opts.timeout || 100)
   .catch(function(err) {
     err.address = opts.uri;
-    throw err;
+    return makeDisposerFunction(context)().then(function() {
+      throw err;
+    });
   });
 
 });
@@ -34,7 +36,7 @@ var makeDisposerFunction = function (context) {
   return function () {
     //console.log("disposer", Object.keys(context));
 
-    if (context.connection.destroyed) { return; }
+    if (context.connection.destroyed) { return Promise.resolve(); }
 
     return new Promise(function (resolve) {
       context.connection.once('close', resolve);
